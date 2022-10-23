@@ -135,9 +135,32 @@ namespace ARTBEE_API.Services
             };
         }
 
-        public Task<Auth> Login(Login login)
+        public async Task<Auth> Login(Login login)
         {
-            throw new NotImplementedException();
+            var auth = new Auth();
+            var user = await _userManager.FindByEmailAsync(login.Email);
+            if (user is null || !await _userManager.CheckPasswordAsync(user, login.Password))
+            {
+                auth.Message = "email or Password incorrect";
+                return auth;
+            }
+
+            var jwtSecurityToken = await CreateJwtToken(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            auth.IsAuthenticated = true;
+            auth.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            auth.Email = user.Email;
+            auth.UserName = user.UserName;
+            auth.Expire = jwtSecurityToken.ValidTo;
+            auth.Roles = roles.ToList();
+            var res = await _signInManager.PasswordSignInAsync(user, login.Password, false, false);
+            if (res.Succeeded)
+            {
+                return auth;
+                //return new Auth() { UserName = auth.UserName };
+            }
+
+            return new Auth() { Message = "Something went wrong" };
         }
 
         public async Task<string> UserToRoleAssign(UserToRole userRole)

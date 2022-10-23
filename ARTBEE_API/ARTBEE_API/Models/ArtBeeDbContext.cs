@@ -24,6 +24,12 @@ namespace ARTBEE_API.Models
                 .WithMany(y => y.Images)
                 .HasForeignKey(z => z.ProductId);
 
+            // Relationship between category and their products (One-to-Many)
+            builder.Entity<Product>()
+                .HasOne(x => x.Category)
+                .WithMany(y => y.Products)
+                .HasForeignKey(z => z.CategoryId);
+
             base.OnModelCreating(builder);
         }
     }

@@ -19,6 +19,8 @@ namespace ARTBEE_API.Models
         public string Description { get; set; }
         public User User { get; set; }
         public string UserId { get; set; }
+        public Category Category { get; set; }
+        public string CategoryId { get; set; }
         public ICollection<Image> Images { get; set; }
     }
 }

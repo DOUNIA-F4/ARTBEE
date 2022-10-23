@@ -34,5 +34,24 @@ namespace ARTBEE_API.Controllers
             return Ok(result);
 
         }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(Login login)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _auth.Login(login);
+            if (!result.IsAuthenticated)
+            {
+                return BadRequest("something went wrong");
+            }
+
+            return Ok(result.Token);
+
+
+        }
     }
 }
