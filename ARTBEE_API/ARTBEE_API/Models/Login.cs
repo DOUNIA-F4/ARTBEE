@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace ARTBEE_API.Models
 {
-    public class Inscription
+    public class Login
     {
         [Required, EmailAddress]
         public string Email { get; set; }
